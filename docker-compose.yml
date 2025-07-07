@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  cdk:
+    build: .
+    volumes:
+      - .:/app
+      - ~/.aws:/root/.aws:ro
+    environment:
+      - AWS_PROFILE=default
+    env_file:
+      - .env
+    command: bash
+    tty: true
