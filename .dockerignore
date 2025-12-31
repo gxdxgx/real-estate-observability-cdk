@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+infrastructure/node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build outputs
+infrastructure/cdk.out/
+infrastructure/*.d.ts
+infrastructure/*.js
+infrastructure/*.js.map
+dist/
+build/
+lambda-layer/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment and secrets
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation (build artifacts)
+docs/_build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# AWS CDK
+cdk.context.json

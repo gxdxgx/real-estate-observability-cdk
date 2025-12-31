@@ -1,14 +1,70 @@
-version: '3.8'
+# Removed version as it's obsolete in newer Docker Compose
 
 services:
   cdk:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: real-estate-cdk-dev
     volumes:
+      # Mount source code for development
       - .:/app
+      # Mount AWS credentials (root user home directory)
       - ~/.aws:/root/.aws:ro
+      # Mount Docker socket to use host Docker daemon for bundling
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persist node_modules for faster rebuilds
+      - node_modules:/app/infrastructure/node_modules
+      # Persist Python virtual environment
+      - lambda_layer:/app/lambda-layer   # ← これを追加
     environment:
       - AWS_PROFILE=default
+      - NODE_ENV=development
+      - PYTHONPATH=/app/src
     env_file:
       - .env
+    entrypoint: ["/app/scripts/docker-entrypoint.sh"]
     command: bash
     tty: true
+    stdin_open: true
+    networks:
+      - real-estate-network
+    healthcheck:
+      test: ["CMD", "node", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # LocalStack for local AWS service emulation (optional)
+  localstack:
+    image: localstack/localstack:latest
+    container_name: real-estate-localstack
+    ports:
+      - "4566:4566"  # LocalStack main port
+      - "4571:4571"  # LocalStack additional services
+    environment:
+      - SERVICES=dynamodb,lambda,apigateway,s3,cloudformation,sts,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/tmp/localstack
+    networks:
+      - real-estate-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  node_modules:
+  localstack_data:
+  lambda_layer:   
+
+networks:
+  real-estate-network:
+    driver: bridge
