@@ -14,7 +14,7 @@ def configure_logger() -> Logger:
     logger = Logger(
         service="real-estate-observability",
         level=log_level,
-        sample_rate=0.1,  # Sample 10% of logs for performance
+        sample_rate=1.0,  # Do not drop logs by sampling
         log_uncaught_exceptions=True,
     )
     

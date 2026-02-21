@@ -44,7 +44,7 @@ export const getEnvironmentConfig = (environment: string): EnvironmentConfig => 
       return {
         ...baseConfig,
         apiStage: 'prod',
-        logLevel: 'WARN',
+        logLevel: 'INFO',
         enableXRay: false,
         enableCustomMetrics: true,
         corsOrigins: ['https://example.com'],
